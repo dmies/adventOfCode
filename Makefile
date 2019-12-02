@@ -1,8 +1,8 @@
 init:
-	pipenv install
+	. venv/bin/activate
 
 run:
-	pipenv run python main.py
+	python main.py
 
 test:
-	pipenv run python -m unittest discover -s tests
+	python -m unittest discover -s tests
