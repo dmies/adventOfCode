@@ -2,10 +2,10 @@
 
 First steps after not using python for some years. Still learning how to do it the right way. :-)
 
-## Run everything (day 01 for now)
+## Run everything (day 01 and 02 for now)
 
 ```
-python day01/__init__.py
+python main.py
 ```
 
 ## Tests

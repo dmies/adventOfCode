@@ -1,5 +1,4 @@
-def file_to_array(path):
-    return [int(line.strip()) for line in open(path, "r")]
+from util import file_to_array
 
 
 def calculate_fuel_needed(mass):
