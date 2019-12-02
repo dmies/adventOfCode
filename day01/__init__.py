@@ -1,4 +1,4 @@
-from util import file_to_array
+from util.filehelper import file_to_array
 
 
 def calculate_fuel_needed(mass):

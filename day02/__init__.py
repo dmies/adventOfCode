@@ -1,4 +1,4 @@
-from util import get_list_from_file
+from util.filehelper import get_list_from_file
 
 
 def add(memory, pos):
