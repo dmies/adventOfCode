@@ -38,7 +38,7 @@ def find_gravity_assist_inputs(memory, desired_output):
     """Find noun and verb that gives desired_output when intcode is run."""
     for noun in range(0, 100):
         for verb in range(0, 100):
-            output = run_intcode(memory[:], noun, verb)
+            output = run_intcode(memory[:], pointer=0, noun=noun, verb=verb)
             if output == desired_output:
                 return 100 * noun + verb
     return False

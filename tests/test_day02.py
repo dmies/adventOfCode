@@ -1,6 +1,4 @@
 import unittest
-import os
-from unittest.mock import patch, mock_open
 from day02 import run_intcode, add, multiply
 
 

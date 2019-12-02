@@ -1,8 +1,5 @@
 import unittest
-import os
 from unittest.mock import patch, mock_open
-
-
 from day01 import calculate_fuel_needed, calculate_fuel_for_fuel
 
 

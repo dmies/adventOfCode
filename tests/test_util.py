@@ -1,5 +1,4 @@
 import unittest
-import os
 from unittest.mock import patch, mock_open
 
 from util import file_to_array, get_list_from_file
