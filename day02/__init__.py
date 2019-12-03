@@ -1,4 +1,4 @@
-from util.filehelper import get_list_from_file
+from util.filehelper import get_number_list_from_file
 
 
 def add(memory, pos):
@@ -45,14 +45,14 @@ def find_gravity_assist_inputs(memory, desired_output):
 
 
 def day02_01():
-    program = get_list_from_file("./puzzles/02/puzzle.txt")
+    program = get_number_list_from_file("./puzzles/02/puzzle.txt")
     program[1] = 12
     program[2] = 2
     print("Output prior to fire: {}".format(run_intcode(program[:], 12, 2)))
 
 
 def day02_02():
-    program = get_list_from_file("./puzzles/02/puzzle.txt")
+    program = get_number_list_from_file("./puzzles/02/puzzle.txt")
     print(
         "Inputs required for gravity assist calculation: {}".format(
             find_gravity_assist_inputs(program, 19690720)
