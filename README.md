@@ -4,7 +4,7 @@ First steps after not using python for some years. Still learning how to do it t
 
 ## Setup
 
-Use pipenv to install all requirements
+Use pip to install all requirements
 
 ```
 make
