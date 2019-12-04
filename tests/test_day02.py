@@ -1,8 +1,7 @@
-import unittest
 from day02 import run_intcode, add, multiply
 
 
-class TestDay02(unittest.TestCase):
+class TestDay02:
     def test_run_intcode_1(self):
         expected = 2
         input = [1, 0, 0, 0, 99]
@@ -39,6 +38,3 @@ class TestDay02(unittest.TestCase):
         result = multiply(input, 0)
         assert expected == result
 
-
-if __name__ == "__main__":
-    unittest.main()

@@ -1,4 +1,3 @@
-import unittest
 from unittest.mock import patch, mock_open
 from util.filehelper import (
     file_to_array,
@@ -7,7 +6,7 @@ from util.filehelper import (
 )
 
 
-class TestUtil(unittest.TestCase):
+class TestUtil:
     def test_file_to_array_opens_the_corrrect_file(self):
         path = "./puzzles/01/puzzle.txt"
         with patch("builtins.open", mock_open(read_data="8\n9\n10")) as mock_file:
@@ -43,6 +42,3 @@ class TestUtil(unittest.TestCase):
             assert sorted(expected) == sorted(result)
             mock_file.reset_mock()
 
-
-if __name__ == "__main__":
-    unittest.main()

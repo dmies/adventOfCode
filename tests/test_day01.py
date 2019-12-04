@@ -1,9 +1,7 @@
-import unittest
-from unittest.mock import patch, mock_open
 from day01 import calculate_fuel_needed, calculate_fuel_for_fuel
 
 
-class TestDay01(unittest.TestCase):
+class TestDay01:
     def test_calculate_fuel_needed_caculates_correct_fuel_for_mass_12(self):
         expected = 2
         input = 12
@@ -46,6 +44,3 @@ class TestDay01(unittest.TestCase):
         result = calculate_fuel_for_fuel(input)
         assert expected == result
 
-
-if __name__ == "__main__":
-    unittest.main()

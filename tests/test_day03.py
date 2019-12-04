@@ -1,8 +1,7 @@
-import unittest
 from day03 import manhattan, parse_command, apply_direction
 
 
-class TestDay03(unittest.TestCase):
+class TestDay03:
     def test_manhattan_distance(self):
         expected = 2
         input = (0, 2)
@@ -49,6 +48,3 @@ class TestDay03(unittest.TestCase):
         result = apply_direction(input_direction, input_point)
         assert expected == result
 
-
-if __name__ == "__main__":
-    unittest.main()
