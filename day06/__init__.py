@@ -30,34 +30,33 @@ def create_planet_to_moon_map(orbit_data):
     return orbit_dict
 
 
-def find_route(start, to, visited, depth, orbit_dict):
+def find_orbit(current_planet, planet_to_moon_map):
+    planets = []
+    for planet, moons in planet_to_moon_map.items():
+        if current_planet in moons:
+            planets.append(planet)
+    return planets
+
+
+def collect_planets_in_center(planet, planet_to_moon_map):
+    planets_in_center = find_orbit(planet, planet_to_moon_map)
+    if planet in planet_to_moon_map:
+        planets_in_center.extend(planet_to_moon_map[planet])
+    return planets_in_center
+
+
+def find_route(start, to, visited, depth, planet_to_moon_map):
     if start in visited:
         return 0
     visited.append(start)
-    str = collect_all(start, orbit_dict)
-    if to in str:
+    planets_in_center = collect_planets_in_center(start, planet_to_moon_map)
+    if to in planets_in_center:
         return depth - 1
-    for s in str:
-        distance = find_route(s, to, visited, depth + 1, orbit_dict)
+    for planet in planets_in_center:
+        distance = find_route(planet, to, visited, depth + 1, planet_to_moon_map)
         if distance > 0:
             return distance
-
     return -1
-
-
-def collect_all(s1, orbit_dict):
-    s = find_orbit(s1, orbit_dict)
-    if s1 in orbit_dict:
-        s.extend(orbit_dict[s1])
-    return s
-
-
-def find_orbit(orbitValue, orbit_dict):
-    planets = []
-    for planet, moons in orbit_dict.items():
-        if orbitValue in moons:
-            planets.append(planet)
-    return planets
 
 
 def get_number_of_direct_and_indirect_orbits(orbit_data):
@@ -81,6 +80,6 @@ def day06_01():
 
 def day06_02():
     orbit_data = get_string_list_from_file("./puzzles/06/puzzle.txt")
-    orbit_dict = create_planet_to_moon_map(orbit_data)
-    orbital_transfers = find_route("YOU", "SAN", [], 0, orbit_dict)
+    planet_to_moon_map = create_planet_to_moon_map(orbit_data)
+    orbital_transfers = find_route("YOU", "SAN", [], 0, planet_to_moon_map)
     print(f"minimum number of orbital transfers required {orbital_transfers}")
