@@ -32,24 +32,22 @@ def calculate_max_thruster(original_memory):
     return res
 
 
-def calculate_optimized_thruster(original_memory):
+def init_amplifiers(memory, phases):
+    states = [
+        IntComputer(memory, inputs=[phase], wait_after_output=True) for phase in phases
+    ]
+    # second input for first amplifier is 0
+    states[0].inputs.append(0)
+    return states
 
+
+def calculate_optimized_thruster(original_memory):
     res = 0
-    phases = []
     all_phases = get_all_phases(5, 10)
     for phases in all_phases:
         calculating = True
         current_amplifier = 0
-        states = []
-
-        for phase in phases:
-            first_input = phase
-            memory = original_memory.copy()
-            amplifier = IntComputer(
-                memory, inputs=[first_input], wait_after_output=True
-            )
-            states.append(amplifier)
-        states[0].inputs.append(0)
+        states = init_amplifiers(original_memory.copy(), phases)
         while calculating:
             amplifier = states[current_amplifier]
 
@@ -66,12 +64,9 @@ def calculate_optimized_thruster(original_memory):
                     calculating = not (amp.finished and calculating)
 
             current_amplifier = (current_amplifier + 1) % 5
-
         last_amplifier = states[-1]
-
         if res < last_amplifier.output:
             res = last_amplifier.output
-
     return res
 
 
