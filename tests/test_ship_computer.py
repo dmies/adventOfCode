@@ -116,146 +116,50 @@ class TestShipComputer:
         result = computer.get_position_for_mode(idx, modes)
         assert result == expected
 
-
-"""
-    @mock.patch("ship.computer.get_position_for_mode")
     def test_get_param_returns_value_from_position_provided_by_get_position_for_mode(
-        self, mock_get_position
+        self,
     ):
-        mock_get_position.return_value = 3
         memory = [1, 2, 3, 4]
-        pos = 0
         idx = 1
         modes = [1, 0, 0, 0]
-        expected = 4
-        result = get_param(memory, pos, idx, modes)
-        assert result == expected
-        assert mock_get_position.called == True
-
-    @mock.patch("ship.computer.get_position_for_mode")
-    @mock.patch("ship.computer.get_param")
-    def test_add(self, mock_get_param, mock_get_position_for_mode):
-        # simulate that these numbers should be added
-        mock_get_param.side_effect = [1, 2]
-        # write everything to index 0
-        mock_get_position_for_mode.return_value = 0
-        memory = [-1]
-        pos = 0
-        modes = []
-        expected = ([3], 4, [], [])
-        result = add(memory, pos, modes)
+        expected = 2
+        computer = IntComputer(memory)
+        result = computer.get_param(idx, modes)
         assert result == expected
 
-    @mock.patch("ship.computer.get_position_for_mode")
-    @mock.patch("ship.computer.get_param")
-    def test_multiply(self, mock_get_param, mock_get_position_for_mode):
-        # simulate that these numbers should be added
-        mock_get_param.side_effect = [3, 4]
-        # write everything to index 0
-        mock_get_position_for_mode.return_value = 0
-        memory = [-1]
-        pos = 0
-        modes = []
-        expected = ([12], 4, [], [])
-        result = multiply(memory, pos, modes)
+    def test_add(self):
+        memory = [1, 1, 1, 1]
+        modes = [1, 1, 1, 1]
+        expected = 2
+        computer = IntComputer(memory)
+        computer.add(modes)
+        result = computer.memory[-1]
         assert result == expected
 
-    @mock.patch("ship.computer.get_position_for_mode")
-    def test_output(self, mock_get_position_for_mode):
-        # write everything to index 0
-        mock_get_position_for_mode.return_value = 0
-        memory = [-1]
-        pos = 0
-        modes = []
-        expected = (memory, 2, [], [-1])
-        result = output(memory, pos, modes)
+    def test_multiply(self):
+        memory = [1, 2, 3, 4]
+        modes = [1, 1, 1, 1]
+        expected = 6
+        computer = IntComputer(memory)
+        computer.multiply(modes)
+        result = computer.memory[-1]
         assert result == expected
 
-    @mock.patch("ship.computer.get_param")
-    def test_jump_if_true(self, mock_get_param):
-        mock_get_param.side_effect = [1, 22]
-        memory = [-1]
-        pos = 0
-        modes = []
-        expected = (memory, 22, [], [])
-        result = jump_if_true(memory, pos, modes)
+    def test_outputHandler(self):
+        memory = [1, 2, 3, 4]
+        modes = [1, 1, 1, 1]
+        expected = 2
+        computer = IntComputer(memory)
+        computer.outputHandler(modes)
+        result = computer.output
         assert result == expected
 
-    @mock.patch("ship.computer.get_param")
-    def test_jump_if_true_negative(self, mock_get_param):
-        mock_get_param.side_effect = [0, 22]
-        memory = [-1]
-        pos = 0
-        modes = []
-        expected = (memory, 3, [], [])
-        result = jump_if_true(memory, pos, modes)
+    def test_jump_if_true(self):
+        memory = [1, 2, 3, 4]
+        modes = [1, 1, 1, 1]
+        expected = 3
+        computer = IntComputer(memory)
+        computer.jump_if_true(modes)
+        result = computer.pointer
         assert result == expected
 
-    @mock.patch("ship.computer.get_param")
-    def test_jump_if_false(self, mock_get_param):
-        mock_get_param.side_effect = [0, 22]
-        memory = [-1]
-        pos = 0
-        modes = []
-        expected = (memory, 22, [], [])
-        result = jump_if_false(memory, pos, modes)
-        assert result == expected
-
-    @mock.patch("ship.computer.get_param")
-    def test_jump_if_false_negative(self, mock_get_param):
-        mock_get_param.side_effect = [1, 22]
-        memory = [-1]
-        pos = 0
-        modes = []
-        expected = (memory, 3, [], [])
-        result = jump_if_false(memory, pos, modes)
-        assert result == expected
-
-    @mock.patch("ship.computer.get_position_for_mode")
-    @mock.patch("ship.computer.get_param")
-    def test_less_than(self, mock_get_param, mock_get_position_for_mode):
-        mock_get_param.side_effect = [1, 22]
-        mock_get_position_for_mode.return_value = 0
-        memory = [-1]
-        pos = 0
-        modes = []
-        expected = ([1], 4, [], [])
-        result = less_than(memory, pos, modes)
-        assert result == expected
-
-    @mock.patch("ship.computer.get_position_for_mode")
-    @mock.patch("ship.computer.get_param")
-    def test_less_than_negative(self, mock_get_param, mock_get_position_for_mode):
-        mock_get_param.side_effect = [100, 22]
-        mock_get_position_for_mode.return_value = 0
-        memory = [-1]
-        pos = 0
-        modes = []
-        expected = ([0], 4, [], [])
-        result = less_than(memory, pos, modes)
-        assert result == expected
-
-    @mock.patch("ship.computer.get_position_for_mode")
-    @mock.patch("ship.computer.get_param")
-    def test_equals(self, mock_get_param, mock_get_position_for_mode):
-        mock_get_param.side_effect = [22, 22]
-        mock_get_position_for_mode.return_value = 0
-        memory = [-1]
-        pos = 0
-        modes = []
-        expected = ([1], 4, [], [])
-        result = equals(memory, pos, modes)
-        assert result == expected
-
-    @mock.patch("ship.computer.get_position_for_mode")
-    @mock.patch("ship.computer.get_param")
-    def test_equals_negative(self, mock_get_param, mock_get_position_for_mode):
-        mock_get_param.side_effect = [100, 22]
-        mock_get_position_for_mode.return_value = 0
-        memory = [-1]
-        pos = 0
-        modes = []
-        expected = ([0], 4, [], [])
-        result = equals(memory, pos, modes)
-        assert result == expected
-"""
