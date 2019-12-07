@@ -1,10 +1,19 @@
 from util.filehelper import get_number_list_from_file
-from ship.computer import run_intcode
+from ship.computer import IntComputer
 
 
-def day05():
+def day05_01():
     program = get_number_list_from_file("./puzzles/05/puzzle.txt")
+    computer = IntComputer(memory=program)
+    computer.inputs = [1]
+    computer.run()
+    print(f"conditioner unit (part 1) {computer.output}")
 
-    print(f"input 1: conditioner unit (part 1)")
-    print(f"input 5: thermal radiator controller (part 2)")
-    print(f"result after processing: {run_intcode(program)}")
+
+def day05_02():
+    program = get_number_list_from_file("./puzzles/05/puzzle.txt")
+    computer = IntComputer(memory=program)
+    computer.inputs = [5]
+    computer.run()
+    print(f"thermal radiator controller (part 2) {computer.output}")
+
