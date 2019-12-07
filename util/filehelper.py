@@ -16,3 +16,7 @@ def get_string_lists_from_file(path):
                 current_line.append(input.strip())
             res.append(current_line)
     return res
+
+
+def get_string_list_from_file(path):
+    return [line.strip() for line in open(path, "r")]
