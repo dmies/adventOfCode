@@ -1,5 +1,21 @@
+from enum import Enum
+from typing import List, Tuple
+
+
+class Mode(Enum):
+    POSITION = 0
+    IMMEDIATE = 1
+    RELATIVE = 2
+
+
 class IntComputer:
-    def __init__(self, memory, pointer=0, inputs=[], wait_after_output=False):
+    def __init__(
+        self,
+        memory: List[int],
+        pointer: int = 0,
+        inputs: List[int] = [],
+        wait_after_output: bool = False,
+    ):
         self.memory = {i: memory[i] for i in range(len(memory))}
         self.pointer = pointer
         self.inputs = inputs
@@ -9,12 +25,12 @@ class IntComputer:
         self.relative_base = 0
         self.wait_after_output = wait_after_output
 
-    def get_position_for_mode(self, idx, modes):
+    def get_position_for_mode(self, idx: int, modes: List[Mode]) -> int:
         mode = modes[idx - 1]
         res = -1
-        if mode == 1:
+        if mode == Mode.IMMEDIATE:
             res = self.pointer + idx
-        elif mode == 2:
+        elif mode == Mode.RELATIVE:
             res = self.memory[self.pointer + idx] + self.relative_base
         else:
             res = self.memory[self.pointer + idx]
@@ -22,41 +38,40 @@ class IntComputer:
             self.memory[res] = 0
         return res
 
-    def get_param(self, idx, modes):
+    def get_param(self, idx: int, modes: List[Mode]) -> int:
         index = self.get_position_for_mode(idx, modes)
-
         return self.memory[index]
 
-    def add(self, modes):
+    def add(self, modes: List[Mode]) -> None:
         value_1 = self.get_param(1, modes)
         value_2 = self.get_param(2, modes)
-        pos = self.get_position_for_mode(3, modes)
-        self.memory[pos] = value_1 + value_2
+        target_position = self.get_position_for_mode(3, modes)
+        self.memory[target_position] = value_1 + value_2
         self.pointer += 4
 
-    def multiply(self, modes):
+    def multiply(self, modes: List[Mode]) -> None:
         value_1 = self.get_param(1, modes)
         value_2 = self.get_param(2, modes)
-        pos = self.get_position_for_mode(3, modes)
-        self.memory[pos] = value_1 * value_2
+        target_position = self.get_position_for_mode(3, modes)
+        self.memory[target_position] = value_1 * value_2
         self.pointer += 4
 
-    def save(self, modes):
+    def save(self, modes: List[Mode]) -> None:
+        target_position = self.get_position_for_mode(1, modes)
         if len(self.inputs) > 0:
             user_input = self.inputs.pop(0)
-            self.memory[self.get_position_for_mode(1, modes)] = user_input
-
+            self.memory[target_position] = user_input
         else:
-            self.memory[self.get_position_for_mode(1, modes)] = int(input("Input: "))
+            self.memory[target_position] = int(input("Input: "))
         self.pointer += 2
 
-    def outputHandler(self, modes):
+    def outputHandler(self, modes: List[Mode]) -> None:
         target_position = self.get_position_for_mode(1, modes)
         self.output = self.memory[target_position]
         self.all_outputs.append(self.output)
         self.pointer += 2
 
-    def jump_if_true(self, modes):
+    def jump_if_true(self, modes: List[Mode]) -> None:
         parameter_1 = self.get_param(1, modes)
         parameter_2 = self.get_param(2, modes)
         if parameter_1 != 0:
@@ -64,7 +79,7 @@ class IntComputer:
         else:
             self.pointer += 3
 
-    def jump_if_false(self, modes):
+    def jump_if_false(self, modes: List[Mode]) -> None:
         parameter_1 = self.get_param(1, modes)
         parameter_2 = self.get_param(2, modes)
         if parameter_1 == 0:
@@ -72,44 +87,45 @@ class IntComputer:
         else:
             self.pointer += 3
 
-    def less_than(self, modes):
+    def less_than(self, modes: List[Mode]) -> None:
         parameter_1 = self.get_param(1, modes)
         parameter_2 = self.get_param(2, modes)
+        target_position = self.get_position_for_mode(3, modes)
         if parameter_1 < parameter_2:
-            self.memory[self.get_position_for_mode(3, modes)] = 1
+            self.memory[target_position] = 1
         else:
-            self.memory[self.get_position_for_mode(3, modes)] = 0
+            self.memory[target_position] = 0
         self.pointer += 4
 
-    def equals(self, modes):
+    def equals(self, modes: List[Mode]) -> None:
         parameter_1 = self.get_param(1, modes)
         parameter_2 = self.get_param(2, modes)
-        target_poistion = self.get_position_for_mode(3, modes)
+        target_position = self.get_position_for_mode(3, modes)
         if parameter_1 == parameter_2:
-            self.memory[target_poistion] = 1
+            self.memory[target_position] = 1
         else:
-            self.memory[target_poistion] = 0
+            self.memory[target_position] = 0
         self.pointer += 4
 
-    def adjust_relative_base(self, modes):
+    def adjust_relative_base(self, modes: List[Mode]) -> None:
         parameter_1 = self.get_param(1, modes)
         self.relative_base += parameter_1
         self.pointer += 2
 
-    def parse_parameter(self):
+    def parse_parameter(self) -> Tuple[int, List[Mode]]:
         opcode = self.memory[self.pointer]
         modes = []
         if opcode > 100:
             mode_opcode = opcode / 100
             opcode = opcode % 100
             while mode_opcode > 0:
-                modes.append(int(mode_opcode % 10))
+                modes.append(Mode(int(mode_opcode % 10)))
                 mode_opcode = int(mode_opcode / 10)
         while len(modes) < 4:
-            modes.append(0)
+            modes.append(Mode.POSITION)
         return (opcode, modes)
 
-    def run(self, noun=None, verb=None):
+    def run(self, noun: int = None, verb: int = None) -> Tuple[int, int]:
         while not self.finished:
             """ run intcode program on memory."""
             self.memory[1] = noun or self.memory[1]
@@ -117,7 +133,7 @@ class IntComputer:
             opcode, modes = self.parse_parameter()
             if opcode == 99:
                 self.finished = True
-                return (-1, -1)
+                return (-1, self.output)
             elif opcode == 1:
                 self.add(modes)
             elif opcode == 2:
