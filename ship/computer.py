@@ -66,8 +66,7 @@ class IntComputer:
         self.pointer += 2
 
     def outputHandler(self, modes: List[Mode]) -> None:
-        target_position = self.get_position_for_mode(1, modes)
-        self.output = self.memory[target_position]
+        self.output = self.get_param(1, modes)
         self.all_outputs.append(self.output)
         self.pointer += 2
 
@@ -128,8 +127,10 @@ class IntComputer:
     def run(self, noun: int = None, verb: int = None) -> Tuple[int, int]:
         while not self.finished:
             """ run intcode program on memory."""
-            self.memory[1] = noun or self.memory[1]
-            self.memory[2] = verb or self.memory[2]
+            if 1 in self.memory:
+                self.memory[1] = noun or self.memory[1]
+            if 2 in self.memory:
+                self.memory[2] = verb or self.memory[2]
             opcode, modes = self.parse_parameter()
             if opcode == 99:
                 self.finished = True
