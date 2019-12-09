@@ -133,7 +133,7 @@ class TestShipComputer:
         expected = 2
         computer = IntComputer(memory)
         computer.add(modes)
-        result = computer.memory[-1]
+        result = computer.memory[3]
         assert result == expected
 
     def test_multiply(self):
@@ -142,7 +142,7 @@ class TestShipComputer:
         expected = 6
         computer = IntComputer(memory)
         computer.multiply(modes)
-        result = computer.memory[-1]
+        result = computer.memory[3]
         assert result == expected
 
     def test_outputHandler(self):
@@ -163,3 +163,44 @@ class TestShipComputer:
         result = computer.pointer
         assert result == expected
 
+    # Day 09
+
+    def test_with_large_numbers(self):
+        memory = [
+            109,
+            1,
+            204,
+            -1,
+            1001,
+            100,
+            1,
+            100,
+            1008,
+            100,
+            16,
+            101,
+            1006,
+            101,
+            0,
+            99,
+        ]
+        computer = IntComputer(memory)
+        computer.run()
+        result = computer.all_outputs
+        assert result == memory
+
+    def test_with_16_digit_number(self):
+        memory = [1102, 34915192, 34915192, 7, 4, 7, 99, 0]
+        computer = IntComputer(memory)
+        computer.run()
+        expected = 1219070632396864
+        result = computer.output
+        assert result == expected
+
+    def test_with_1125899906842624(self):
+        memory = [104, 1125899906842624, 99]
+        computer = IntComputer(memory)
+        computer.run()
+        expected = 1125899906842624
+        result = computer.output
+        assert result == expected

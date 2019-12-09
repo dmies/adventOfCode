@@ -1,20 +1,30 @@
 class IntComputer:
     def __init__(self, memory, pointer=0, inputs=[], wait_after_output=False):
-        self.memory = memory
+        self.memory = {i: memory[i] for i in range(len(memory))}
         self.pointer = pointer
         self.inputs = inputs
         self.output = -1
+        self.all_outputs = []
         self.finished = False
+        self.relative_base = 0
         self.wait_after_output = wait_after_output
 
     def get_position_for_mode(self, idx, modes):
-        if modes[idx - 1] == 1:
-            return self.pointer + idx
+        mode = modes[idx - 1]
+        res = -1
+        if mode == 1:
+            res = self.pointer + idx
+        elif mode == 2:
+            res = self.memory[self.pointer + idx] + self.relative_base
         else:
-            return self.memory[self.pointer + idx]
+            res = self.memory[self.pointer + idx]
+        if res not in self.memory:
+            self.memory[res] = 0
+        return res
 
     def get_param(self, idx, modes):
         index = self.get_position_for_mode(idx, modes)
+
         return self.memory[index]
 
     def add(self, modes):
@@ -43,6 +53,7 @@ class IntComputer:
     def outputHandler(self, modes):
         target_position = self.get_position_for_mode(1, modes)
         self.output = self.memory[target_position]
+        self.all_outputs.append(self.output)
         self.pointer += 2
 
     def jump_if_true(self, modes):
@@ -73,11 +84,17 @@ class IntComputer:
     def equals(self, modes):
         parameter_1 = self.get_param(1, modes)
         parameter_2 = self.get_param(2, modes)
+        target_poistion = self.get_position_for_mode(3, modes)
         if parameter_1 == parameter_2:
-            self.memory[self.get_position_for_mode(3, modes)] = 1
+            self.memory[target_poistion] = 1
         else:
-            self.memory[self.get_position_for_mode(3, modes)] = 0
+            self.memory[target_poistion] = 0
         self.pointer += 4
+
+    def adjust_relative_base(self, modes):
+        parameter_1 = self.get_param(1, modes)
+        self.relative_base += parameter_1
+        self.pointer += 2
 
     def parse_parameter(self):
         opcode = self.memory[self.pointer]
@@ -93,32 +110,34 @@ class IntComputer:
         return (opcode, modes)
 
     def run(self, noun=None, verb=None):
-        """ run intcode program on memory."""
-        self.memory[1] = noun or self.memory[1]
-        self.memory[2] = verb or self.memory[2]
-        opcode, modes = self.parse_parameter()
-        if opcode == 99:
-            self.finished = True
-            return (-1, -1)
-        elif opcode == 1:
-            self.add(modes)
-        elif opcode == 2:
-            self.multiply(modes)
-        elif opcode == 3:
-            self.save(modes)
-        elif opcode == 4:
-            self.outputHandler(modes)
-            if self.wait_after_output:
-                return (1, self.output)
-        elif opcode == 5:
-            self.jump_if_true(modes)
-        elif opcode == 6:
-            self.jump_if_false(modes)
-        elif opcode == 7:
-            self.less_than(modes)
-        elif opcode == 8:
-            self.equals(modes)
-        else:
-            print(f"illegal opcode: {opcode}")
+        while not self.finished:
+            """ run intcode program on memory."""
+            self.memory[1] = noun or self.memory[1]
+            self.memory[2] = verb or self.memory[2]
+            opcode, modes = self.parse_parameter()
+            if opcode == 99:
+                self.finished = True
+                return (-1, -1)
+            elif opcode == 1:
+                self.add(modes)
+            elif opcode == 2:
+                self.multiply(modes)
+            elif opcode == 3:
+                self.save(modes)
+            elif opcode == 4:
+                self.outputHandler(modes)
+                if self.wait_after_output:
+                    return (1, self.output)
+            elif opcode == 5:
+                self.jump_if_true(modes)
+            elif opcode == 6:
+                self.jump_if_false(modes)
+            elif opcode == 7:
+                self.less_than(modes)
+            elif opcode == 8:
+                self.equals(modes)
+            elif opcode == 9:
+                self.adjust_relative_base(modes)
+            else:
+                print(f"illegal opcode: {opcode}")
 
-        return self.run()
