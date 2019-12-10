@@ -1,4 +1,4 @@
-# Advent of code 2019 in Python
+# Advent of Code 2019 in Python
 
 First steps after not using python for some years. Still learning how to do it the right way. :-)
 
