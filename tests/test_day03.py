@@ -1,19 +1,7 @@
-from day03 import manhattan, parse_command, apply_direction
+from day03 import parse_command, apply_direction
 
 
 class TestDay03:
-    def test_manhattan_distance(self):
-        expected = 2
-        input = (0, 2)
-        result = manhattan(input)
-        assert expected == result
-
-    def test_manhattan_distance_with_negative_number(self):
-        expected = 5
-        input = (-3, 2)
-        result = manhattan(input)
-        assert expected == result
-
     def test_parse_command(self):
         expected = ("R", 123)
         input = "R123"

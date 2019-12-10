@@ -1,13 +1,5 @@
 from collections import defaultdict
-from util.filehelper import get_string_lists_from_file
-
-
-def manhattan(point):
-    """
-    calculates the manhattan distance of a point to (0,0)
-    """
-    x, y = point
-    return abs(x) + abs(y)
+from util import coordinates, filehelper
 
 
 def parse_command(command):
@@ -65,7 +57,7 @@ def get_crossings(wire_1, wire_2):
 
 def get_minimal_distance_to_intersection(wire_1, wire_2):
     crossings = get_crossings(wire_1, wire_2)
-    return min([manhattan(pos) for pos in crossings])
+    return min([coordinates.manhattan_distance(pos) for pos in crossings])
 
 
 def get_closest_intersection(wire_1, wire_2):
@@ -82,7 +74,7 @@ def get_closest_intersection(wire_1, wire_2):
 
 
 def day03_01():
-    wires = get_string_lists_from_file("./puzzles/03/puzzle.txt")
+    wires = filehelper.get_string_lists_from_file("./puzzles/03/puzzle.txt")
     wire_1 = wires[0]
     wire_2 = wires[1]
 
@@ -92,7 +84,7 @@ def day03_01():
 
 
 def day03_02():
-    wires = get_string_lists_from_file("./puzzles/03/puzzle.txt")
+    wires = filehelper.get_string_lists_from_file("./puzzles/03/puzzle.txt")
     wire_1 = wires[0]
     wire_2 = wires[1]
 
