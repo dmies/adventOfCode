@@ -14,3 +14,8 @@ def day09_02():
     computer = IntComputer(memory=program, inputs=[2])
     computer.run()
     print(f"Coordinates {computer.all_outputs}")
+
+
+if __name__ == "__main__":
+    day09_01()
+    day09_02()

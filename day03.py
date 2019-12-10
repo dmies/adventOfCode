@@ -99,3 +99,8 @@ def day03_02():
     fewest_steps = get_closest_intersection(wire_1, wire_2)
 
     print(f"fewest steps: {fewest_steps}")
+
+
+if __name__ == "__main__":
+    day03_01()
+    day03_02()

@@ -44,7 +44,6 @@ def group_asteroids_by_angle(map, start_point):
 
 
 def get_location_for_station(map):
-
     res = 0
     coordinates = (0, 0)
     y = 0
@@ -84,15 +83,12 @@ def get_200th_vaporized_asteroid(map, station):
             if not first_run:
                 list_of_asteroids = asteroid_map[key]
                 closest = 0
-                i = 1
-                while i < len(list_of_asteroids):
-                    asteroid = list_of_asteroids[i]
+                for i, asteroid in enumerate(list_of_asteroids):
                     distance = manhattan_distance(station, asteroid)
                     if distance < manhattan_distance(
                         station, list_of_asteroids[closest]
                     ):
                         closest = i
-                    i += 1
                 if vaporized_asteroids == 199:  # we start at 0
                     return list_of_asteroids[closest]
                 del list_of_asteroids[closest]
@@ -104,10 +100,6 @@ def get_200th_vaporized_asteroid(map, station):
 
 def day10_01():
     map = get_map_from_file("./puzzles/10/puzzle.txt")
-    for line in map:
-        map_row = ""
-        for item in line:
-            map_row += item
     print(f"best location: {get_location_for_station(map)}")
 
 
@@ -118,3 +110,7 @@ def day10_02():
         f"the 200th vaporized asteroid is on coordinates: {get_200th_vaporized_asteroid(map, start_point)}"
     )
 
+
+if __name__ == "__main__":
+    day10_01()
+    day10_02()

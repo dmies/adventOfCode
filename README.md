@@ -10,10 +10,16 @@ Use pip to install all requirements
 make
 ```
 
-## Run everything (day 01 and 02 for now)
+## Run everything
 
 ```
 make run
+```
+
+### Run a single day
+
+```
+python day01.py
 ```
 
 ## Tests

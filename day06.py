@@ -83,3 +83,8 @@ def day06_02():
     planet_to_moon_map = create_planet_to_moon_map(orbit_data)
     orbital_transfers = find_route("YOU", "SAN", [], 0, planet_to_moon_map)
     print(f"minimum number of orbital transfers required {orbital_transfers}")
+
+
+if __name__ == "__main__":
+    day06_01()
+    day06_02()

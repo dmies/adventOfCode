@@ -46,3 +46,8 @@ def day04_02():
     end = 789860
     res = get_number_of_potential_passwords_improved(start, end)
     print(f"Number of possible passwords (improved): {res}")
+
+
+if __name__ == "__main__":
+    day04_01()
+    day04_02()

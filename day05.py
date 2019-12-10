@@ -17,3 +17,7 @@ def day05_02():
     computer.run()
     print(f"thermal radiator controller (part 2) {computer.output}")
 
+
+if __name__ == "__main__":
+    day05_01()
+    day05_02()

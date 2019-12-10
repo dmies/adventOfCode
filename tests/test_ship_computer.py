@@ -161,6 +161,7 @@ class TestShipComputer:
         computer = IntComputer(memory)
         result = computer.get_param(idx, modes)
         assert result == expected
+        assert mock_get_position_for_mode.called_with(1, [])
 
     @patch.object(IntComputer, "get_position_for_mode")
     @patch.object(IntComputer, "get_param")

@@ -74,3 +74,8 @@ def day08_02():
     layers = parse_image(picture_data=picture_data[0], width=25, height=6)
     decoded_image = decode_image(layers)
     print_image(decoded_image)
+
+
+if __name__ == "__main__":
+    day08_01()
+    day08_02()

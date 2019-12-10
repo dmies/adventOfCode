@@ -35,3 +35,7 @@ def day01_02():
     fuel_needed = sum(fuel_list)
     print(f"fuel needed for fuel: {fuel_needed}")
 
+
+if __name__ == "__main__":
+    day01_01()
+    day01_02()

@@ -1,19 +1,21 @@
-from enum import Enum
-from typing import List, Tuple
+import enum
+import typing
 
 
-class Mode(Enum):
+class Mode(enum.Enum):
     POSITION = 0
     IMMEDIATE = 1
     RELATIVE = 2
 
 
 class IntComputer:
+    # before init: static variables
+
     def __init__(
         self,
-        memory: List[int],
+        memory: typing.List[int],
         pointer: int = 0,
-        inputs: List[int] = [],
+        inputs: typing.List[int] = [],
         wait_after_output: bool = False,
     ):
         self.memory = {i: memory[i] for i in range(len(memory))}
@@ -25,7 +27,9 @@ class IntComputer:
         self.relative_base = 0
         self.wait_after_output = wait_after_output
 
-    def get_position_for_mode(self, idx: int, modes: List[Mode]) -> int:
+    # after init instance variables
+
+    def get_position_for_mode(self, idx: int, modes: typing.List[Mode]) -> int:
         mode = modes[idx - 1]
         res = -1
         if mode == Mode.IMMEDIATE:
@@ -38,25 +42,25 @@ class IntComputer:
             self.memory[res] = 0
         return res
 
-    def get_param(self, idx: int, modes: List[Mode]) -> int:
+    def get_param(self, idx: int, modes: typing.List[Mode]) -> int:
         index = self.get_position_for_mode(idx, modes)
         return self.memory[index]
 
-    def add(self, modes: List[Mode]) -> None:
+    def add(self, modes: typing.List[Mode]) -> None:
         value_1 = self.get_param(1, modes)
         value_2 = self.get_param(2, modes)
         target_position = self.get_position_for_mode(3, modes)
         self.memory[target_position] = value_1 + value_2
         self.pointer += 4
 
-    def multiply(self, modes: List[Mode]) -> None:
+    def multiply(self, modes: typing.List[Mode]) -> None:
         value_1 = self.get_param(1, modes)
         value_2 = self.get_param(2, modes)
         target_position = self.get_position_for_mode(3, modes)
         self.memory[target_position] = value_1 * value_2
         self.pointer += 4
 
-    def save(self, modes: List[Mode]) -> None:
+    def save(self, modes: typing.List[Mode]) -> None:
         target_position = self.get_position_for_mode(1, modes)
         if len(self.inputs) > 0:
             user_input = self.inputs.pop(0)
@@ -65,12 +69,12 @@ class IntComputer:
             self.memory[target_position] = int(input("Input: "))
         self.pointer += 2
 
-    def outputHandler(self, modes: List[Mode]) -> None:
+    def outputHandler(self, modes: typing.List[Mode]) -> None:
         self.output = self.get_param(1, modes)
         self.all_outputs.append(self.output)
         self.pointer += 2
 
-    def jump_if_true(self, modes: List[Mode]) -> None:
+    def jump_if_true(self, modes: typing.List[Mode]) -> None:
         parameter_1 = self.get_param(1, modes)
         parameter_2 = self.get_param(2, modes)
         if parameter_1 != 0:
@@ -78,7 +82,7 @@ class IntComputer:
         else:
             self.pointer += 3
 
-    def jump_if_false(self, modes: List[Mode]) -> None:
+    def jump_if_false(self, modes: typing.List[Mode]) -> None:
         parameter_1 = self.get_param(1, modes)
         parameter_2 = self.get_param(2, modes)
         if parameter_1 == 0:
@@ -86,7 +90,7 @@ class IntComputer:
         else:
             self.pointer += 3
 
-    def less_than(self, modes: List[Mode]) -> None:
+    def less_than(self, modes: typing.List[Mode]) -> None:
         parameter_1 = self.get_param(1, modes)
         parameter_2 = self.get_param(2, modes)
         target_position = self.get_position_for_mode(3, modes)
@@ -96,7 +100,7 @@ class IntComputer:
             self.memory[target_position] = 0
         self.pointer += 4
 
-    def equals(self, modes: List[Mode]) -> None:
+    def equals(self, modes: typing.List[Mode]) -> None:
         parameter_1 = self.get_param(1, modes)
         parameter_2 = self.get_param(2, modes)
         target_position = self.get_position_for_mode(3, modes)
@@ -106,12 +110,12 @@ class IntComputer:
             self.memory[target_position] = 0
         self.pointer += 4
 
-    def adjust_relative_base(self, modes: List[Mode]) -> None:
+    def adjust_relative_base(self, modes: typing.List[Mode]) -> None:
         parameter_1 = self.get_param(1, modes)
         self.relative_base += parameter_1
         self.pointer += 2
 
-    def parse_parameter(self) -> Tuple[int, List[Mode]]:
+    def parse_parameter(self) -> typing.Tuple[int, typing.List[Mode]]:
         opcode = self.memory[self.pointer]
         modes = []
         if opcode > 100:
@@ -124,7 +128,9 @@ class IntComputer:
             modes.append(Mode.POSITION)
         return (opcode, modes)
 
-    def run(self, noun: int = None, verb: int = None) -> Tuple[int, int]:
+    opcode_to_function = {1: add}
+
+    def run(self, noun: int = None, verb: int = None) -> typing.Tuple[int, int]:
         while not self.finished:
             """ run intcode program on memory."""
             if 1 in self.memory:
@@ -132,6 +138,14 @@ class IntComputer:
             if 2 in self.memory:
                 self.memory[2] = verb or self.memory[2]
             opcode, modes = self.parse_parameter()
+            """
+            try:
+                func = self.opcode_to_function[opcode]
+            except KeyError:  # as e:
+                raise Exception(f"Unknown opcode {opcode}")
+
+            func(modes)
+            """
             if opcode == 99:
                 self.finished = True
                 return (-1, self.output)

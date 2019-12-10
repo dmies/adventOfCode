@@ -82,3 +82,8 @@ def day07_02():
     print(
         f"The highest signal (combined amplifiers) that can be sent to the thrusters is: {res}"
     )
+
+
+if __name__ == "__main__":
+    day07_01()
+    day07_02()
