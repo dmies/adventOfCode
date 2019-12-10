@@ -18,5 +18,17 @@ def get_string_lists_from_file(path):
     return res
 
 
+def get_map_from_file(path):
+    res = []
+    with open(path, "r") as f:
+        for line in f.readlines():
+            current_line = []
+            for letter in line:
+                if letter != "\n":
+                    current_line.append(letter)
+            res.append(current_line)
+    return res
+
+
 def get_string_list_from_file(path):
     return [line.strip() for line in open(path, "r")]
