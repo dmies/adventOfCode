@@ -66,9 +66,10 @@ def get_200th_vaporized_asteroid(map, station):
     asteroid_map = group_asteroids_by_angle(map, station)
     vaporized_asteroids = 0
     first_run = True
+    sorted_keys = sorted(asteroid_map)
     while vaporized_asteroids < 200:
         # "rotate the gun"
-        for key in sorted(asteroid_map):
+        for key in sorted_keys:
             # wait for gun to be at 90 degrees
             if key == 90.0:
                 first_run = False
