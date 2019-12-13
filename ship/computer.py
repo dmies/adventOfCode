@@ -17,6 +17,7 @@ class IntComputer:
         pointer: int = 0,
         inputs: typing.List[int] = [],
         wait_after_output: bool = False,
+        wait_for_input: bool = False,
     ):
         self.memory = {i: memory[i] for i in range(len(memory))}
         self.pointer = pointer
@@ -26,6 +27,7 @@ class IntComputer:
         self.finished = False
         self.relative_base = 0
         self.wait_after_output = wait_after_output
+        self.wait_for_input = wait_for_input
 
     # after init instance variables
 
@@ -154,6 +156,8 @@ class IntComputer:
             elif opcode == 2:
                 self.multiply(modes)
             elif opcode == 3:
+                if len(self.inputs) == 0 and self.wait_for_input:
+                    return (-2, None)
                 self.save(modes)
             elif opcode == 4:
                 self.outputHandler(modes)
