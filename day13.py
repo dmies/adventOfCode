@@ -53,8 +53,9 @@ class Game:
         paddle_x = None
         while not self.computer.finished:
             n += 1
-            status, output = self.computer.run()
-            if status == -2:  # waiting for input
+            output = self.computer.run()
+            computer_ready = not self.computer.finished and not self.computer.waiting
+            if self.computer.waiting:  # waiting for input
                 i = 0
                 if paddle_x > ball_x:
                     i = LEFT
@@ -67,12 +68,11 @@ class Game:
                     self.render()
                 # reset n because we need to run again with the needed input
                 n -= 1
-
-            elif status != -1 and n == 1:
+            elif computer_ready and n == 1:
                 current_x = output
-            elif status != -1 and n == 2:
+            elif computer_ready and n == 2:
                 current_y = output
-            elif status != -1 and n == 3:
+            elif computer_ready and n == 3:
                 if current_x == -1 and current_y == 0:
                     self.score = output
                 else:

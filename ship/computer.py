@@ -25,6 +25,7 @@ class IntComputer:
         self.output = -1
         self.all_outputs = []
         self.finished = False
+        self.waiting = False
         self.relative_base = 0
         self.wait_after_output = wait_after_output
         self.wait_for_input = wait_for_input
@@ -132,7 +133,8 @@ class IntComputer:
 
     opcode_to_function = {1: add}
 
-    def run(self, noun: int = None, verb: int = None) -> typing.Tuple[int, int]:
+    def run(self, noun: int = None, verb: int = None) -> None:
+        self.waiting = False
         while not self.finished:
             """ run intcode program on memory."""
             if 1 in self.memory:
@@ -149,20 +151,22 @@ class IntComputer:
             func(modes)
             """
             if opcode == 99:
+                self.waiting = True
                 self.finished = True
-                return (-1, self.output)
+                return self.output
             elif opcode == 1:
                 self.add(modes)
             elif opcode == 2:
                 self.multiply(modes)
             elif opcode == 3:
                 if len(self.inputs) == 0 and self.wait_for_input:
-                    return (-2, None)
+                    self.waiting = True
+                    return None
                 self.save(modes)
             elif opcode == 4:
                 self.outputHandler(modes)
                 if self.wait_after_output:
-                    return (1, self.output)
+                    return self.output
             elif opcode == 5:
                 self.jump_if_true(modes)
             elif opcode == 6:

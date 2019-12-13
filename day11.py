@@ -80,11 +80,11 @@ def paint_hull(robot, computer, hull: Hull) -> Hull:
     while not computer.finished:
         current_color = hull.get_color(coordinates)
         computer.inputs = [current_color]
-        _, color = computer.run()
+        color = computer.run()
         hull.paint(coordinates, color)
 
         if not computer.finished:
-            _, turn = computer.run()
+            turn = computer.run()
             direction = Direction(direction).turn(Turn(turn))
             coordinates = Direction(direction).move_in_direction(coordinates)
 
