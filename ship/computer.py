@@ -45,7 +45,6 @@ class IntComputer:
 
     def get_position_for_mode(self, idx: int, modes: typing.List[Mode]) -> int:
         mode = modes[idx - 1]
-        res = -1
         if mode == Mode.IMMEDIATE:
             res = self.pointer + idx
         elif mode == Mode.RELATIVE:
@@ -139,18 +138,19 @@ class IntComputer:
                 mode_opcode = int(mode_opcode / 10)
         while len(modes) < 4:
             modes.append(Mode.POSITION)
-        return (opcode, modes)
+        return opcode, modes
 
     def run(self, noun: int = None, verb: int = None) -> typing.Optional[int]:
         self.waiting = False
         while not self.finished:
             """ run intcode program on memory."""
-            if 1 in self.memory:
+            if len(self.memory) > 2:
                 self.memory[1] = noun or self.memory[1]
-            if 2 in self.memory:
                 self.memory[2] = verb or self.memory[2]
             opcode, modes = self.parse_parameter()
-            """ opcodes 99 and 4 must be handled before default opcode processing """
+            """ 
+            opcodes 99 and 4 must be handled before default opcode processing 
+            """
             if opcode == 99:
                 """ program is finished """
                 self.waiting = True
@@ -169,4 +169,3 @@ class IntComputer:
                 # output must be returned after processing
                 if opcode == 4 and self.wait_after_output:
                     return self.output
-
