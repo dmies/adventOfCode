@@ -1,4 +1,4 @@
-from day12 import Moon, simulate_moons, get_steps_to_find_same_state
+from day12 import Moon, simulate_moons, get_steps_to_find_same_state, get_total_energy
 
 
 def test_init_handles_string_input():
@@ -22,6 +22,32 @@ def test_apply_velocity():
     expected.velocity = (-2, 0, 3)
     moon.apply_velocity()
     assert moon == expected
+
+
+def test_get_total_energy():
+    expected = 179
+    start_input = [
+        "<x=-1, y=0, z=2>",
+        "<x=2, y=-10, z=-7>",
+        "<x=4, y=-8, z=8>",
+        "<x=3, y=5, z=-1>",
+    ]
+    moons = [Moon(row) for row in start_input]
+    result = get_total_energy(moons, 10)
+    assert result == expected
+
+
+def test_get_total_energy_2nd_example():
+    expected = 1940
+    start_input = [
+        "<x=-8, y=-10, z=0>",
+        "<x=5, y=5, z=10>",
+        "<x=2, y=-7, z=3>",
+        "<x=9, y=-8, z=-3>",
+    ]
+    moons = [Moon(row) for row in start_input]
+    result = get_total_energy(moons, 100)
+    assert result == expected
 
 
 def test_get_steps_to_find_same_state():

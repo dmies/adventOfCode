@@ -95,6 +95,15 @@ def simulate_moons(moons: [Moon], steps=1):
     return moons
 
 
+def get_total_energy(moons, steps):
+    total_energy = 0
+
+    simulate_moons(moons, steps)
+    for moon in moons:
+        total_energy += moon.get_total_energy()
+    return total_energy
+
+
 def least_common_multiple(x: int, y: int, z: int) -> int:
     least_common_multiple_xy = x // math.gcd(x, y) * y
     return least_common_multiple_xy // math.gcd(least_common_multiple_xy, z) * z
@@ -137,11 +146,7 @@ def get_steps_to_find_same_state(moons: [Moon]):
 def day12_01():
     text = filehelper.get_string_list_from_file("./puzzles/12/puzzle.txt")
     moons = [Moon(line) for line in text]
-    total_energy = 0
-
-    simulate_moons(moons, steps=1000)
-    for moon in moons:
-        total_energy += moon.get_total_energy()
+    total_energy = get_total_energy(moons, steps=1000)
 
     print(f"The total energy in the system after 100 steps is {total_energy}")
 
