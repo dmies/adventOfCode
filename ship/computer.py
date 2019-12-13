@@ -30,6 +30,18 @@ class IntComputer:
         self.wait_after_output = wait_after_output
         self.wait_for_input = wait_for_input
 
+        self.opcode_to_function = {
+            1: self.add,
+            2: self.multiply,
+            3: self.save,
+            4: self.outputHandler,
+            5: self.jump_if_true,
+            6: self.jump_if_false,
+            7: self.less_than,
+            8: self.equals,
+            9: self.adjust_relative_base,
+        }
+
     # after init instance variables
 
     def get_position_for_mode(self, idx: int, modes: typing.List[Mode]) -> int:
@@ -131,8 +143,6 @@ class IntComputer:
             modes.append(Mode.POSITION)
         return (opcode, modes)
 
-    opcode_to_function = {1: add}
-
     def run(self, noun: int = None, verb: int = None) -> None:
         self.waiting = False
         while not self.finished:
@@ -142,41 +152,23 @@ class IntComputer:
             if 2 in self.memory:
                 self.memory[2] = verb or self.memory[2]
             opcode, modes = self.parse_parameter()
-            """
-            try:
-                func = self.opcode_to_function[opcode]
-            except KeyError:  # as e:
-                raise Exception(f"Unknown opcode {opcode}")
-
-            func(modes)
-            """
+            """ opcodes 99 and 4 must be handled before default opcode processing """
             if opcode == 99:
+                """ program is finished """
                 self.waiting = True
                 self.finished = True
                 return self.output
-            elif opcode == 1:
-                self.add(modes)
-            elif opcode == 2:
-                self.multiply(modes)
-            elif opcode == 3:
-                if len(self.inputs) == 0 and self.wait_for_input:
-                    self.waiting = True
-                    return None
-                self.save(modes)
-            elif opcode == 4:
-                self.outputHandler(modes)
-                if self.wait_after_output:
-                    return self.output
-            elif opcode == 5:
-                self.jump_if_true(modes)
-            elif opcode == 6:
-                self.jump_if_false(modes)
-            elif opcode == 7:
-                self.less_than(modes)
-            elif opcode == 8:
-                self.equals(modes)
-            elif opcode == 9:
-                self.adjust_relative_base(modes)
+            elif opcode == 3 and len(self.inputs) == 0 and self.wait_for_input:
+                """ program waits for input """
+                self.waiting = True
+                return None
             else:
-                print(f"illegal opcode: {opcode}")
+                try:
+                    func = self.opcode_to_function[opcode]
+                except KeyError:  # as e:
+                    raise Exception(f"Unknown opcode {opcode}")
+                func(modes)
+                # output must be returned after processing
+                if opcode == 4 and self.wait_after_output:
+                    return self.output
 
