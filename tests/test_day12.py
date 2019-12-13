@@ -1,4 +1,4 @@
-from day12 import Moon, simulate_moons
+from day12 import Moon, simulate_moons, get_steps_to_find_same_state
 
 
 def test_init_handles_string_input():
@@ -24,29 +24,16 @@ def test_apply_velocity():
     assert moon == expected
 
 
-def test_simulate_moons():
-    expected_input = [
-        "<x= 2, y=-1, z= 1>",
-        "<x= 3, y=-7, z=-4>",
-        "<x= 1, y=-7, z= 5>",
-        "<x= 2, y= 2, z= 0>",
-    ]
-
-    expected = [Moon(row) for row in expected_input]
-
+def test_get_steps_to_find_same_state():
+    expected = 4686774924
     start_input = [
-        "<x=-1, y=  0, z= 2>",
-        "<x= 2, y=-10, z=-7>",
-        "<x= 4, y= -8, z= 8>",
-        "<x= 3, y=  5, z=-1>",
+        "<x=-8, y=-10, z=0>",
+        "<x=5, y=5, z=10>",
+        "<x=2, y=-7, z=3>",
+        "<x=9, y=-8, z=-3>",
     ]
-
     moons = [Moon(row) for row in start_input]
-    for moon in moons:
-        print(f"{moon}")
-    moons = simulate_moons(moons)
-    print("---")
-    for moon in moons:
-        print(f"{moon}")
-    assert moons == expected
+
+    result = get_steps_to_find_same_state(moons)
+    assert result == expected
 

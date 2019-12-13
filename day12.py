@@ -84,12 +84,13 @@ class Moon:
         return f"Moon(x={self.x}, y={self.y}, z={self.z}, velocity={self.velocity})"
 
 
-def simulate_moons(moons: [Moon]):
-    for moon, other in combinations(moons, 2):
-        moon.apply_gravity(other)
-        other.apply_gravity(moon)
-    for moon in moons:
-        moon.apply_velocity()
+def simulate_moons(moons: [Moon], steps=1):
+    for _ in range(steps):
+        for moon, other in combinations(moons, 2):
+            moon.apply_gravity(other)
+            other.apply_gravity(moon)
+        for moon in moons:
+            moon.apply_velocity()
 
     return moons
 
@@ -137,8 +138,8 @@ def day12_01():
     text = filehelper.get_string_list_from_file("./puzzles/12/puzzle.txt")
     moons = [Moon(line) for line in text]
     total_energy = 0
-    for _ in range(1000):
-        simulate_moons(moons)
+
+    simulate_moons(moons, steps=1000)
     for moon in moons:
         total_energy += moon.get_total_energy()
 
