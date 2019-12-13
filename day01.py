@@ -4,7 +4,8 @@ from util.filehelper import file_to_array
 def calculate_fuel_needed(mass: int) -> int:
     """
     Fuel required to launch a given module is based on its mass. 
-    Specifically, to find the fuel required for a module, take its mass, divide by three, round down, and subtract 2.
+    Specifically, to find the fuel required for a module, take its mass, divide
+    by three, round down, and subtract 2.
     """
     return int(mass / 3) - 2
 
@@ -12,7 +13,8 @@ def calculate_fuel_needed(mass: int) -> int:
 def calculate_fuel_for_fuel(mass: int) -> int:
     """
     So, for each module mass, calculate its fuel and add it to the total. 
-    Then, treat the fuel amount you just calculated as the input mass and repeat the process, 
+    Then, treat the fuel amount you just calculated as the input mass and
+    repeat the process,
     continuing until a fuel requirement is zero or negative. 
     """
     fuel_needed = calculate_fuel_needed(mass)

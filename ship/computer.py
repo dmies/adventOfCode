@@ -23,7 +23,6 @@ class IntComputer:
         self.pointer = pointer
         self.inputs = inputs
         self.output = -1
-        self.all_outputs = []
         self.finished = False
         self.waiting = False
         self.relative_base = 0
@@ -34,7 +33,7 @@ class IntComputer:
             1: self.add,
             2: self.multiply,
             3: self.save,
-            4: self.outputHandler,
+            4: self.output_handler,
             5: self.jump_if_true,
             6: self.jump_if_false,
             7: self.less_than,
@@ -84,9 +83,8 @@ class IntComputer:
             self.memory[target_position] = int(input("Input: "))
         self.pointer += 2
 
-    def outputHandler(self, modes: typing.List[Mode]) -> None:
+    def output_handler(self, modes: typing.List[Mode]) -> None:
         self.output = self.get_param(1, modes)
-        self.all_outputs.append(self.output)
         self.pointer += 2
 
     def jump_if_true(self, modes: typing.List[Mode]) -> None:
@@ -143,7 +141,7 @@ class IntComputer:
             modes.append(Mode.POSITION)
         return (opcode, modes)
 
-    def run(self, noun: int = None, verb: int = None) -> None:
+    def run(self, noun: int = None, verb: int = None) -> typing.Optional[int]:
         self.waiting = False
         while not self.finished:
             """ run intcode program on memory."""

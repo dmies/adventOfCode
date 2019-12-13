@@ -3,7 +3,7 @@ from util.filehelper import get_string_list_from_file
 
 def parse_orbit_map(orbit_map):
     planets = orbit_map.split(")")
-    return (planets[0], planets[1])
+    return planets[0], planets[1]
 
 
 def create_moon_to_planet_map(orbit_data):

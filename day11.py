@@ -35,7 +35,7 @@ class Direction(enum.IntEnum):
             y -= 1
         elif self == Direction.LEFT:
             x -= 1
-        return (x, y)
+        return x, y
 
 
 class Hull:
@@ -54,7 +54,7 @@ class Hull:
         self.data[coordinates] = color
 
     def get_color(self, coordinates: (int, int)) -> int:
-        if not coordinates in self.data:
+        if coordinates not in self.data:
             self.data[coordinates] = 0
         return self.data[coordinates]
 
@@ -65,7 +65,6 @@ class Hull:
         for y in range(self.height, self.min_height - 1, -1):
             line = ""
             for x in range(self.min_width, self.width):
-                item = " "
                 coordinates = (x, y)
                 if self.get_color(coordinates) == 1:
                     item = "#"
@@ -113,4 +112,3 @@ def day11_02():
 if __name__ == "__main__":
     day11_01()
     day11_02()
-

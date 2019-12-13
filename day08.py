@@ -38,7 +38,7 @@ def get_layer_with_fewest_0_digits(layers):
     count = None
     for layer in layers:
         zeros_in_rows = get_number_of_digits_in_layer(layer, 0)
-        if count == None or zeros_in_rows < count:
+        if count is None or zeros_in_rows < count:
             count = zeros_in_rows
             res = layer
     return res

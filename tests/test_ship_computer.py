@@ -214,7 +214,7 @@ class TestShipComputer:
         assert 2 == computer.pointer
 
     @patch.object(IntComputer, "get_param")
-    def test_outputHandler_stores_value_from_get_param_in_all_outouts(
+    def test_output_handler_stores_value_from_get_param_in_output(
         self, mock_get_param
     ):
         expected = 12345
@@ -222,10 +222,9 @@ class TestShipComputer:
         memory = []
         modes = []
         computer = IntComputer(memory)
-        computer.outputHandler(modes)
+        computer.output_handler(modes)
         result = computer.output
         assert result == expected
-        assert computer.all_outputs == [expected]
         assert 2 == computer.pointer
 
     @patch.object(IntComputer, "get_param")
@@ -375,15 +374,15 @@ class TestShipComputer:
         computer.run()
         assert mock_save.called == True
 
-    @patch.object(IntComputer, "outputHandler")
+    @patch.object(IntComputer, "output_handler")
     @patch.object(IntComputer, "parse_parameter")
-    def test_run_executes_outputHandler_on_opcode_4(
-        self, mock_parse_parameter, mock_outputHandler
+    def test_run_executes_output_handler_on_opcode_4(
+        self, mock_parse_parameter, mock_output_handler
     ):
         mock_parse_parameter.side_effect = [(4, []), (99, [])]
         computer = IntComputer([])
         computer.run()
-        assert mock_outputHandler.called == True
+        assert mock_output_handler.called
 
     @patch.object(IntComputer, "jump_if_true")
     @patch.object(IntComputer, "parse_parameter")
@@ -454,10 +453,12 @@ class TestShipComputer:
             0,
             99,
         ]
-        computer = IntComputer(memory)
-        computer.run()
-        result = computer.all_outputs
-        assert result == memory
+        computer = IntComputer(memory, wait_after_output=True)
+        all_outputs = []
+        while not computer.finished:
+            computer.run()
+            all_outputs.append(computer.output)
+        assert all_outputs[0:-1] == memory
 
     def test_with_16_digit_number(self):
         memory = [1102, 34915192, 34915192, 7, 4, 7, 99, 0]

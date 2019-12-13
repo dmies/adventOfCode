@@ -47,16 +47,13 @@ class Game:
         n = 0
         current_x = None
         current_y = None
-        current_tile = None
-
         ball_x = None
         paddle_x = None
         while not self.computer.finished:
             n += 1
             output = self.computer.run()
-            computer_ready = not self.computer.finished and not self.computer.waiting
+            ready = not self.computer.finished and not self.computer.waiting
             if self.computer.waiting:  # waiting for input
-                i = 0
                 if paddle_x > ball_x:
                     i = LEFT
                 elif paddle_x < ball_x:
@@ -68,11 +65,11 @@ class Game:
                     self.render()
                 # reset n because we need to run again with the needed input
                 n -= 1
-            elif computer_ready and n == 1:
+            elif ready and n == 1:
                 current_x = output
-            elif computer_ready and n == 2:
+            elif ready and n == 2:
                 current_y = output
-            elif computer_ready and n == 3:
+            elif ready and n == 3:
                 if current_x == -1 and current_y == 0:
                     self.score = output
                 else:
@@ -88,7 +85,7 @@ class Game:
 def day13_01():
     program = filehelper.get_number_list_from_file("./puzzles/13/puzzle.txt")
 
-    game = Game(program, play=False, visual_mode=True)
+    game = Game(program, play=False, visual_mode=False)
     game.play_game()
 
     count = 0
