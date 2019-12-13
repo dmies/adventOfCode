@@ -61,7 +61,7 @@ class Hull:
     def get_size(self):
         return len(self.data)
 
-    def print(self) -> None:
+    def render(self) -> None:
         for y in range(self.height, self.min_height - 1, -1):
             line = ""
             for x in range(self.min_width, self.width):
@@ -102,12 +102,12 @@ def day11_01():
 
 def day11_02():
     program = filehelper.get_number_list_from_file("./puzzles/11/puzzle.txt")
-    robot = ((0, 0), 0)
+    robot = ((0, 0), Direction.UP)
     computer = IntComputer(program, wait_after_output=True)
     hull = Hull()
     hull.paint((0, 0), 1)
     hull = paint_hull(robot, computer, hull)
-    hull.print()
+    hull.render()
 
 
 if __name__ == "__main__":
