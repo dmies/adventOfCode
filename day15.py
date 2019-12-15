@@ -129,7 +129,7 @@ class Map:
                 left = min(left, position[0])
         return top, right, bottom, left
 
-    def find_oxygen(self) -> None:
+    def find_oxygen(self) -> int:
         search = defaultdict(int)
         search[(0, 0)] = 1
         new_search = copy(search)
