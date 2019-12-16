@@ -198,9 +198,8 @@ class Map:
 def day15_01() -> None:
     program = filehelper.get_number_list_from_file("./puzzles/15/puzzle.txt")
     droid_map = Map.get_map(program)
-    droid_map.render()
     result = droid_map.find_oxygen()
-    print(f"Solution: {result}")  # 236
+    print(f"minimal distance to oxyden: {result}")  # 236
 
 
 def day15_02() -> None:
@@ -209,7 +208,7 @@ def day15_02() -> None:
     droid_map = Map.get_map(program)
 
     result = Map.fill_with_oxygen(droid_map)
-    print(f"Solution: {result}")  # 368
+    print(f"minutes to fill with oxyden: {result}")  # 368
 
 
 if __name__ == "__main__":
